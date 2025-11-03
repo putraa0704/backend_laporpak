@@ -1,4 +1,5 @@
 <?php
+// app/Models/Report.php
 
 namespace App\Models;
 
@@ -12,6 +13,10 @@ class Report extends Model
     protected $fillable = [
         'user_id',
         'assigned_to',
+        'approved_by_rt',
+        'rt_approved_at',
+        'rt_notes',
+        'rt_recommended',
         'title',
         'complaint_description',
         'location_description',
@@ -25,6 +30,8 @@ class Report extends Model
     protected $casts = [
         'report_date' => 'date',
         'report_time' => 'datetime:H:i',
+        'rt_approved_at' => 'datetime',
+        'rt_recommended' => 'boolean',
     ];
 
     public function user()
@@ -40,6 +47,11 @@ class Report extends Model
     public function assignedPetugas()
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function approvedByRT()
+    {
+        return $this->belongsTo(User::class, 'approved_by_rt');
     }
 
     // Scope untuk filter berdasarkan status
@@ -61,6 +73,12 @@ class Report extends Model
     public function scopeDone($query)
     {
         return $query->where('status', 'done');
+    }
+
+    // Scope untuk laporan yang sudah direkomendasikan RT
+    public function scopeRTRecommended($query)
+    {
+        return $query->where('rt_recommended', true);
     }
 
     // Accessor untuk mendapatkan URL foto lengkap

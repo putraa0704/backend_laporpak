@@ -1,7 +1,5 @@
 <?php
-// ===================================
-// routes/api.php - UPDATE dengan Admin Routes
-// ===================================
+// routes/api.php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -9,12 +7,7 @@ use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\Admin\AdminReportController;
 use App\Http\Controllers\Api\Admin\PetugasController;
 use App\Http\Controllers\Api\Admin\WargaController;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-*/
+use App\Http\Controllers\Api\RT\RTReportController;
 
 // Public routes
 Route::prefix('auth')->group(function () {
@@ -32,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('update-profile', [AuthController::class, 'updateProfile']);
     });
 
-    // Report routes (Warga & Admin)
+    // Report routes (Warga)
     Route::prefix('reports')->group(function () {
         Route::get('/', [ReportController::class, 'index']);
         Route::post('/', [ReportController::class, 'store']);
@@ -45,27 +38,23 @@ Route::middleware('auth:sanctum')->group(function () {
     // ========================================
     // RT ROUTES (Rukun Tetangga)
     // ========================================
-    Route::prefix('rt')->middleware('role:admin,petugas,rt')->group(function () {
-        
-        // RT Report Management (sama seperti admin tapi lebih sederhana)
+    Route::prefix('rt')->middleware('role:rt')->group(function () {
         Route::prefix('reports')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Api\RT\RTReportController::class, 'index']);
-            Route::get('/by-date', [\App\Http\Controllers\Api\RT\RTReportController::class, 'reportsByDate']);
-            Route::get('/approval', [\App\Http\Controllers\Api\RT\RTReportController::class, 'getApprovalReports']);
-            Route::get('/approval/{id}', [\App\Http\Controllers\Api\RT\RTReportController::class, 'getApprovalDetail']);
-            Route::get('/dashboard-stats', [\App\Http\Controllers\Api\RT\RTReportController::class, 'dashboardStats']);
+            Route::get('/', [RTReportController::class, 'index']);
+            Route::get('/by-date', [RTReportController::class, 'reportsByDate']);
+            Route::get('/approval', [RTReportController::class, 'getApprovalReports']);
+            Route::get('/dashboard-stats', [RTReportController::class, 'dashboardStats']);
             
-            // Action buttons
-            Route::post('/{id}/confirm', [\App\Http\Controllers\Api\RT\RTReportController::class, 'confirmReport']);
-            Route::post('/{id}/complete', [\App\Http\Controllers\Api\RT\RTReportController::class, 'completeReport']);
-            Route::post('/{id}/update-status', [\App\Http\Controllers\Api\RT\RTReportController::class, 'updateStatus']);
+            // Action buttons RT
+            Route::post('/{id}/confirm-recommend', [RTReportController::class, 'confirmAndRecommend']); // Konfirmasi & Rekomendasikan ke Admin
+            Route::post('/{id}/reject', [RTReportController::class, 'rejectReport']); // Tolak laporan
         });
     });
 
     // ========================================
     // ADMIN ROUTES
     // ========================================
-    Route::prefix('admin')->middleware('role:admin,petugas')->group(function () {
+    Route::prefix('admin')->middleware('role:admin')->group(function () {
         
         // Admin Report Management
         Route::prefix('reports')->group(function () {
@@ -73,12 +62,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/by-date', [AdminReportController::class, 'reportsByDate']);
             Route::get('/need-approval', [AdminReportController::class, 'needApproval']);
             Route::get('/dashboard-stats', [AdminReportController::class, 'dashboardStats']);
-            Route::post('/{id}/approve', [AdminReportController::class, 'approve']);
-            Route::post('/{id}/assign', [AdminReportController::class, 'assignToPetugas']);
+            
+            // Action buttons Admin
+            Route::post('/{id}/confirm', [AdminReportController::class, 'confirmReport']); // Konfirmasi (pending -> in_progress)
+            Route::post('/{id}/complete', [AdminReportController::class, 'completeReport']); // Selesaikan (-> done)
         });
 
-        // Petugas Management (Admin only)
-        Route::middleware('role:admin')->prefix('petugas')->group(function () {
+        // Petugas Management
+        Route::prefix('petugas')->group(function () {
             Route::get('/', [PetugasController::class, 'index']);
             Route::get('/available', [PetugasController::class, 'available']);
             Route::post('/', [PetugasController::class, 'store']);
@@ -87,8 +78,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{id}', [PetugasController::class, 'destroy']);
         });
 
-        // Warga Management (Admin only)
-        Route::middleware('role:admin')->prefix('warga')->group(function () {
+        // Warga Management
+        Route::prefix('warga')->group(function () {
             Route::get('/', [WargaController::class, 'index']);
             Route::get('/{id}', [WargaController::class, 'show']);
             Route::get('/{id}/statistics', [WargaController::class, 'statistics']);
