@@ -1,0 +1,360 @@
+{
+  "info": {
+    "name": "LaporPak API - RT Endpoints",
+    "description": "API Documentation untuk RT (Rukun Tetangga)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RT - Authentication",
+      "item": [
+        {
+          "name": "Login RT",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "rt@laporpak.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get RT Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "RT - Reports Management",
+      "item": [
+        {
+          "name": "Get All Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports?status=all&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "all",
+                  "description": "all, pending, on_hold, in_progress, done"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reports by Date (Kalender)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/by-date?month=11&year=2025",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "by-date"],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "11",
+                  "description": "1-12"
+                },
+                {
+                  "key": "year",
+                  "value": "2025"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/dashboard-stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "dashboard-stats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "RT - Approval Page",
+      "item": [
+        {
+          "name": "Get Reports for Approval (Tab: Semua)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/approval?tab=semua&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "approval"],
+              "query": [
+                {
+                  "key": "tab",
+                  "value": "semua",
+                  "description": "semua, laporan, dalam_proses, selesai"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reports for Approval (Tab: Laporan)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/approval?tab=laporan",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "approval"],
+              "query": [
+                {
+                  "key": "tab",
+                  "value": "laporan",
+                  "description": "Hanya laporan pending"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reports for Approval (Tab: Dalam Proses)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/approval?tab=dalam_proses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "approval"],
+              "query": [
+                {
+                  "key": "tab",
+                  "value": "dalam_proses"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reports for Approval (Tab: Selesai)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/approval?tab=selesai",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "approval"],
+              "query": [
+                {
+                  "key": "tab",
+                  "value": "selesai"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Approval Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/approval/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "approval", "1"]
+            }
+          }
+        },
+        {
+          "name": "Konfirmasi Report (Tombol Ungu)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/1/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "1", "confirm"]
+            },
+            "description": "Mengubah status dari pending ke in_progress"
+          }
+        },
+        {
+          "name": "Selesaikan Report (Tombol Hijau)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "notes",
+                  "value": "Laporan sudah selesai ditangani",
+                  "type": "text",
+                  "description": "Optional notes"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/1/complete",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "1", "complete"]
+            },
+            "description": "Mengubah status menjadi done"
+          }
+        },
+        {
+          "name": "Update Status Manual",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{rt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "status",
+                  "value": "on_hold",
+                  "type": "text",
+                  "description": "pending, on_hold, in_progress, done"
+                },
+                {
+                  "key": "notes",
+                  "value": "Menunggu informasi lebih lanjut",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/rt/reports/1/update-status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rt", "reports", "1", "update-status"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "rt_token",
+      "value": "rt_token_here",
+      "type": "string"
+    }
+  ]
+}

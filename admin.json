@@ -1,0 +1,437 @@
+{
+  "info": {
+    "name": "LaporPak API - Admin Endpoints",
+    "description": "API Documentation untuk Admin dan Petugas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Admin - Reports Management",
+      "item": [
+        {
+          "name": "Get All Reports (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/reports?status=all&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "reports"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "all",
+                  "description": "all, pending, on_hold, in_progress, done"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reports by Date (Kalender)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/reports/by-date?month=11&year=2025",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "reports", "by-date"],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "11",
+                  "description": "1-12"
+                },
+                {
+                  "key": "year",
+                  "value": "2025"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reports Need Approval",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/reports/need-approval?tab=semua",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "reports", "need-approval"],
+              "query": [
+                {
+                  "key": "tab",
+                  "value": "semua",
+                  "description": "semua, laporan, dalam_proses, selesai"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/reports/dashboard-stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "reports", "dashboard-stats"]
+            }
+          }
+        },
+        {
+          "name": "Approve Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "approved",
+                  "value": "true",
+                  "type": "text",
+                  "description": "true = approve, false = reject"
+                },
+                {
+                  "key": "reason",
+                  "value": "Tidak sesuai kriteria",
+                  "type": "text",
+                  "description": "Required jika approved = false"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/reports/1/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "reports", "1", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Assign to Petugas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "petugas_id",
+                  "value": "2",
+                  "type": "text",
+                  "description": "ID petugas yang akan ditugaskan"
+                },
+                {
+                  "key": "notes",
+                  "value": "Segera tangani laporan ini",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/reports/1/assign",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "reports", "1", "assign"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Petugas Management",
+      "item": [
+        {
+          "name": "Get All Petugas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/petugas?per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "petugas"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Available Petugas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/petugas/available",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "petugas", "available"]
+            }
+          }
+        },
+        {
+          "name": "Get Petugas Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/petugas/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "petugas", "2"]
+            }
+          }
+        },
+        {
+          "name": "Create Petugas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Pak Budi",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "budi.petugas@laporpak.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "081234567890",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "Kantor Kelurahan",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/petugas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "petugas"]
+            }
+          }
+        },
+        {
+          "name": "Update Petugas",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Pak Budi Updated\",\n  \"phone\": \"082345678901\",\n  \"address\": \"Alamat baru\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/petugas/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "petugas", "2"]
+            }
+          }
+        },
+        {
+          "name": "Delete Petugas",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/petugas/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "petugas", "2"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Warga Management",
+      "item": [
+        {
+          "name": "Get All Warga",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/warga?per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "warga"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Warga Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/warga/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "warga", "3"]
+            }
+          }
+        },
+        {
+          "name": "Get Warga Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/warga/3/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "warga", "3", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Warga Status (Suspend/Activate)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/warga/3/toggle-status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "warga", "3", "toggle-status"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "admin_token_here",
+      "type": "string"
+    }
+  ]
+}
