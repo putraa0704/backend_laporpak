@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/Api/ReportController.php
 
 namespace App\Http\Controllers\Api;
 
@@ -7,9 +8,67 @@ use App\Models\Report;
 use App\Models\ReportHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ReportController extends Controller
 {
+    // Create new report
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'complaint_description' => 'required|string',
+            'location_description' => 'required|string',
+            'report_date' => 'required|date',
+            'report_time' => 'required',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+
+        $data = $request->all();
+        $data['user_id'] = $request->user()->id;
+        $data['status'] = 'pending';
+
+        // ✅ PERBAIKAN: Simpan foto dengan path yang benar
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            
+            // Generate unique filename
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            
+            // Simpan ke storage/app/public/reports
+            $path = $file->storeAs('reports', $filename, 'public');
+            
+            $data['photo'] = $path; // Simpan path: reports/filename.jpg
+            
+            // Log untuk debugging
+            Log::info('Photo uploaded:', [
+                'original_name' => $file->getClientOriginalName(),
+                'stored_path' => $path,
+                'full_url' => asset('storage/' . $path)
+            ]);
+        }
+
+        $report = Report::create($data);
+
+        // Create history
+        ReportHistory::create([
+            'report_id' => $report->id,
+            'status' => 'pending',
+            'notes' => 'Laporan dibuat',
+            'changed_at' => now(),
+            'changed_by' => $request->user()->id,
+        ]);
+
+        // ✅ Return dengan full URL foto
+        $report->load('user');
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Laporan berhasil dibuat',
+            'data' => $report
+        ], 201);
+    }
+
     // Get all reports (with filters)
     public function index(Request $request)
     {
@@ -47,45 +106,6 @@ class ReportController extends Controller
             'success' => true,
             'data' => $report
         ]);
-    }
-
-    // Create new report
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'complaint_description' => 'required|string',
-            'location_description' => 'required|string',
-            'report_date' => 'required|date',
-            'report_time' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
-        ]);
-
-        $data = $request->all();
-        $data['user_id'] = $request->user()->id;
-        $data['status'] = 'pending';
-
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('reports', 'public');
-            $data['photo'] = $path;
-        }
-
-        $report = Report::create($data);
-
-        // Create history
-        ReportHistory::create([
-            'report_id' => $report->id,
-            'status' => 'pending',
-            'notes' => 'Laporan dibuat',
-            'changed_at' => now(),
-            'changed_by' => $request->user()->id,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Laporan berhasil dibuat',
-            'data' => $report
-        ], 201);
     }
 
     // Update report status (Admin/Petugas only)

@@ -34,6 +34,9 @@ class Report extends Model
         'rt_recommended' => 'boolean',
     ];
 
+    // ✅ PENTING: Append photo_url ke setiap response
+    protected $appends = ['photo_url'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -75,15 +78,24 @@ class Report extends Model
         return $query->where('status', 'done');
     }
 
-    // Scope untuk laporan yang sudah direkomendasikan RT
     public function scopeRTRecommended($query)
     {
         return $query->where('rt_recommended', true);
     }
 
-    // Accessor untuk mendapatkan URL foto lengkap
+    // ✅ Accessor untuk mendapatkan URL foto lengkap
     public function getPhotoUrlAttribute()
     {
-        return $this->photo ? asset('storage/' . $this->photo) : null;
+        if (!$this->photo) {
+            return null;
+        }
+
+        // Jika sudah full URL, return as is
+        if (str_starts_with($this->photo, 'http')) {
+            return $this->photo;
+        }
+
+        // Generate full URL: http://127.0.0.1:8000/storage/reports/filename.jpg
+        return url('storage/' . $this->photo);
     }
 }
