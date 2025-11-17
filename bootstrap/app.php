@@ -18,6 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         // Register custom middleware alias
+
+        $middleware->api(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
+        
+        // Alias untuk custom middleware
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);

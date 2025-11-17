@@ -28,7 +28,6 @@ class ReportController extends Controller
         $data['user_id'] = $request->user()->id;
         $data['status'] = 'pending';
 
-        // ✅ PERBAIKAN: Simpan foto dengan path yang benar
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
             
@@ -44,7 +43,8 @@ class ReportController extends Controller
             Log::info('Photo uploaded:', [
                 'original_name' => $file->getClientOriginalName(),
                 'stored_path' => $path,
-                'full_url' => asset('storage/' . $path)
+                'storage_disk' => 'public',
+                'full_url' => url('storage/' . $path)
             ]);
         }
 
@@ -59,13 +59,23 @@ class ReportController extends Controller
             'changed_by' => $request->user()->id,
         ]);
 
-        // ✅ Return dengan full URL foto
+        // Load relationship dan return dengan photo_url
         $report->load('user');
+        
+
+        $reportArray = $report->toArray();
+        
+        Log::info('Report created:', [
+            'id' => $report->id,
+            'photo' => $report->photo,
+            'photo_url' => $report->photo_url,
+            'full_response' => $reportArray
+        ]);
         
         return response()->json([
             'success' => true,
             'message' => 'Laporan berhasil dibuat',
-            'data' => $report
+            'data' => $reportArray
         ], 201);
     }
 
@@ -90,6 +100,13 @@ class ReportController extends Controller
         }
 
         $reports = $query->paginate($request->per_page ?? 10);
+
+        // Log untuk debugging
+        Log::info('Reports fetched:', [
+            'count' => $reports->count(),
+            'first_report_photo' => $reports->first()?->photo ?? 'no photo',
+            'first_report_photo_url' => $reports->first()?->photo_url ?? 'no photo_url'
+        ]);
 
         return response()->json([
             'success' => true,

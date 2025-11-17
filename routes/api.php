@@ -8,16 +8,18 @@ use App\Http\Controllers\Api\Admin\AdminReportController;
 use App\Http\Controllers\Api\Admin\PetugasController;
 use App\Http\Controllers\Api\Admin\WargaController;
 use App\Http\Controllers\Api\RT\RTReportController;
+use App\Http\Controllers\Api\ImageController;
 
 // Public routes
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 });
+Route::get('storage/{path}', [ImageController::class, 'show'])->where('path', '.*');
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
-    
+
     // Auth routes
     Route::prefix('auth')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
@@ -44,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/by-date', [RTReportController::class, 'reportsByDate']);
             Route::get('/approval', [RTReportController::class, 'getApprovalReports']);
             Route::get('/dashboard-stats', [RTReportController::class, 'dashboardStats']);
-            
+
             // Action buttons RT
             Route::post('/{id}/confirm-recommend', [RTReportController::class, 'confirmAndRecommend']); // Konfirmasi & Rekomendasikan ke Admin
             Route::post('/{id}/reject', [RTReportController::class, 'rejectReport']); // Tolak laporan
@@ -55,14 +57,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // ADMIN ROUTES
     // ========================================
     Route::prefix('admin')->middleware('role:admin')->group(function () {
-        
+
         // Admin Report Management
         Route::prefix('reports')->group(function () {
             Route::get('/', [AdminReportController::class, 'index']);
             Route::get('/by-date', [AdminReportController::class, 'reportsByDate']);
             Route::get('/need-approval', [AdminReportController::class, 'needApproval']);
             Route::get('/dashboard-stats', [AdminReportController::class, 'dashboardStats']);
-            
+
             // Action buttons Admin
             Route::post('/{id}/confirm', [AdminReportController::class, 'confirmReport']); // Konfirmasi (pending -> in_progress)
             Route::post('/{id}/complete', [AdminReportController::class, 'completeReport']); // Selesaikan (-> done)
@@ -87,6 +89,7 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 });
+
 
 // Health check
 Route::get('health', function () {
