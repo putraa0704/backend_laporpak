@@ -8,6 +8,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use App\Http\Middleware\CheckTokenExpiry;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Alias untuk custom middleware
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
+            'check.token.expiry' => CheckTokenExpiry::class,
         ]);
         
         // Jika perlu encrypt cookies (optional)
