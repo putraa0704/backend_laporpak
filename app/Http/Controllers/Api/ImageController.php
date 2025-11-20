@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;  // <-- PASTIKAN INI ADA
-use Illuminate\Support\Facades\Response; // <-- PASTIKAN INI ADA
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Contracts\Filesystem\FileNotFoundException; // Untuk penanganan error
 
 class ImageController extends Controller

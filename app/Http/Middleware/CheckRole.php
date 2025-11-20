@@ -1,8 +1,5 @@
 <?php
-// ===================================
-// File: app/Http/Middleware/CheckRole.php
-// Middleware untuk check role user
-// ===================================
+
 
 namespace App\Http\Middleware;
 
