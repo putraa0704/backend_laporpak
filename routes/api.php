@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\ImageController;
 // Public routes
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('login', [AuthController::class, 'login'])->name('login');
 });
 Route::get('storage/{path}', [ImageController::class, 'show'])->where('path', '.*');
 

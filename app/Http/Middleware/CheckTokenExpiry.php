@@ -22,7 +22,7 @@ class CheckTokenExpiry
             $token = $user->currentAccessToken();
 
             if ($token) {
-                $expiryTime = 60; // 30 menit dalam detik
+                $expiryTime = 18000; // 5 jam dalam detik (5 * 60 * 60)
                 $tokenAge = now()->diffInSeconds($token->last_used_at ?? $token->created_at);
 
                 if ($tokenAge > $expiryTime) {
