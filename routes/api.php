@@ -16,8 +16,8 @@ Route::prefix('auth')->group(function () {
 });
 Route::get('storage/{path}', [ImageController::class, 'show'])->where('path', '.*');
 
-// Protected routes dengan token expiry check
-Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
+// Protected routes - HAPUS check.token.expiry middleware
+Route::middleware(['auth:sanctum'])->group(function () {
 
     // Auth routes
     Route::prefix('auth')->group(function () {
